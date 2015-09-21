@@ -1,6 +1,9 @@
 library(MASS)
 library(ggplot2)
 
+##
+# corrdata
+# Purpose: Create a data.frame with two columns of normally distributed data that are correlated
 corrdata=function(samples=200,r=0){
   data = mvrnorm(n=samples, mu=c(0, 0), Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)
   X = data[, 1]  # standard normal (mu=0, sd=1)
