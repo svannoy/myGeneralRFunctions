@@ -1,6 +1,6 @@
 
 # Redirect to a file, overwriting, capturing output and error messages
-logName <- "dmhp_analysis_log.txt"
+logName <- "army_validate_log.txt"
 con <- file(logName)
 sink(con, append=FALSE)
 sink(con, append=FALSE, type="message")

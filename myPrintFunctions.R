@@ -4,6 +4,9 @@ library(rtf)
 
 # These functions use some 'global' variables for tracking table and plot numbers
 
+# Create an environtment and two variables used to lable tables/plots, each successive
+# call to print table or plot appends the sequence number. See below for functions to 
+# reset the sequence if desireds
 myTablePrint.env <- new.env()
 myTablePrint.env$tableNum = 1
 myTablePrint.env$figureNum = 1
