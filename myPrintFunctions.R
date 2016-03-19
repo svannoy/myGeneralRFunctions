@@ -6,7 +6,7 @@ library(rtf)
 
 # Create an environtment and two variables used to lable tables/plots, each successive
 # call to print table or plot appends the sequence number. See below for functions to 
-# reset the sequence if desireds
+# reset the sequence if desired
 myTablePrint.env <- new.env()
 myTablePrint.env$tableNum = 1
 myTablePrint.env$figureNum = 1
@@ -17,6 +17,42 @@ setTableCount <- function(x) myTablePrint.env$tableNum <- x
 
 resetFigureCount <- function() myTablePrint.env$figureNum <- 1
 setFigureCount <- function(x) myTablePrint.env$figureNum <- x
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+#  myGetRtf
+#
+#  Purpose: Just a wrapper to get an RTF file. 
+#
+#  Comments: All these options should be something that the user could set
+#           if I was going to continue to support/develop the pseudo-package
+
+myGetRtf <- function(fileName=NULL){
+
+  if (is.null(fileName)){
+    warning("You called myGetRtf without passing a file name, your output will go to the console")
+    return(NULL)
+  }
+  
+  rtfFile <- RTF(fileName, width=8.5, height=11, font.size=11, omi=c(0.5, 0.5, 0.5, 0.5))
+  
+  return(rtfFile)
+  
+}
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+#  myCloseRtf
+#
+#  Purpose: Just a wrapper to conduct a "done" on the rtfFile. 
+#
+
+myCloseRtf<- function(rtf){
+
+if (is.null(rtf) == FALSE){
+ done(rtfFile)
+}
+  
+}
+
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 myRegressionPrint <- function(rtf=NULL, modelFit, isLogit = FALSE, numDigits=as.numeric(options("digits")), title=" "){
@@ -53,10 +89,28 @@ myRegressionPrint <- function(rtf=NULL, modelFit, isLogit = FALSE, numDigits=as.
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 myChiSquarePrint <- function(rtf=NULL, chiSquareResults, numDigits=as.numeric(options("digits")), title=""){
-    
+  
+  if (class(chiSquareResults) != "htest"){
+    warning("Invalid data sent to myChiSquarePrint(), argument chiSquareResults not of type htest")
+    return()
+  } 
   dfToPrint <- data.frame(Chi2 = as.numeric(chiSquareResults$statistic), Df=as.numeric(chiSquareResults$parameter), PValue = chiSquareResults$p.value)
   
-  myRoundedTablePrint(rtfFile, dfToPrint, colsToRound=c(1,3), numDigits, title, includeRowNames=FALSE, colNames = c("Chi-Squ", "D.F.", "P-Value"))
+  myRoundedTablePrint(rtf, dfToPrint, colsToRound=c(1,3), numDigits, title, includeRowNames=FALSE, colNames = c("Chi-Squ", "D.F.", "P-Value"))
+}
+
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+myChiSquarePrint <- function(rtf=NULL, chiSquareResults, numDigits=as.numeric(options("digits")), title=""){
+  
+  if (class(chiSquareResults) != "htest"){
+    warning("Invalid data sent to myChiSquarePrint(), argument chiSquareResults not of type htest")
+    return()
+  } 
+  dfToPrint <- data.frame(Chi2 = as.numeric(chiSquareResults$statistic), Df=as.numeric(chiSquareResults$parameter), PValue = chiSquareResults$p.value)
+  
+  myRoundedTablePrint(rtf, dfToPrint, colsToRound=c(1,3), numDigits, title, includeRowNames=FALSE, colNames = c("Chi-Squ", "D.F.", "P-Value"))
 }
 
 
@@ -192,6 +246,11 @@ myTextListPrint <- function(rtf = NULL, textList, includeRowNums = FALSE){
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 myPlotPrint <- function(rtf = NULL, thePlot){
   
+  # Do some error checking on thePlot
+  if (!("ggplot" %in% class(thePlot))){
+    warning("Called myPlotPrint with variable thePlot not in class ggplot")
+    return(NULL)
+  }
   # Get the title and add the Figure # (note, not all plots sent here have titles -  e.g. BayesianFirstAid)
   if (is.element('labels',names(thePlot))){
     thePlot$labels$title <- paste("Figure ", myTablePrint.env$figureNum, " - ",  thePlot$labels$title)

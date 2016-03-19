@@ -58,8 +58,18 @@ countSignificantTests_Holms <- function(pValues, referenceP = 0.05, addComps = 0
     i <- i + 1
   }
   
-  sigP <- which(pValues %in% sortedPValues[i-1:i])
-  return(list(numSignificant = i-1, sigPIndexes = sigP, sigPValues = sortedPValues[1:i-1], holmsValues = holmsValues))
+  sigPIndexes <- which(pValues %in% sortedPValues[i-1:i]) # Note the reverse index here
+
+  sigFlag <- rep(FALSE, length(pValues))
+  if (length(sigPIndexes) >= 1) {
+    sigFlag[sigPIndexes] <- TRUE
+    sigFlag <- factor(sigFlag, labels=c("FALSE", "TRUE"))
+  }
+  else {
+    sigFlag <- factor(sigFlag, labels=c("FALSE"))
+  }
+                 
+  return(list(numSignificant = i-1, sigPIndexes = sigPIndexes, sigPValues = sortedPValues[1:i-1], holmsValues = holmsValues, sigFlag = sigFlag))
 }
 
 ####
