@@ -68,20 +68,20 @@ myRegressionPrint <- function(rtf=NULL, modelFit, isLogit = FALSE, numDigits=as.
     
     
     colNames = c("OR", "2.5%", "97.5%", "P-Value", "Estimate", "S.E.", "Z")
-    myRoundedTablePrint(rtfFile, dfToPrint, colsToRound=c(1:7), numDigits, title, includeRowNames=TRUE, colNames)
+    myRoundedTablePrint(rtf, dfToPrint, colsToRound=c(1:7), numDigits, title, includeRowNames=TRUE, colNames)
     
   }
   else { 
     dfToPrint <- as.data.frame(modelSummary$coefficients)
     colNames = c("Estimate", "S.E.", "Z", "P-Value")
-    myRoundedTablePrint(rtfFile, dfToPrint, colsToRound=c(1:4), numDigits, title, includeRowNames=TRUE, colNames)
+    myRoundedTablePrint(rtf, dfToPrint, colsToRound=c(1:4), numDigits, title, includeRowNames=TRUE, colNames)
     
     # Blank line
-    myTextPrint(rtfFile, "")
+    myTextPrint(rtf, "")
     
     # Use Broom package to get regression summary
     require(broom)
-    myRoundedTablePrint(rtfFile, dfToPrint = glance(modelFit),colsToRound = c(1:5,7:10),numDigits=4, paste("Summary Stats for ", title))
+    myRoundedTablePrint(rtf, dfToPrint = glance(modelFit),colsToRound = c(1:5,7:10),numDigits=4, paste("Summary Stats for ", title))
   }
 
 }
