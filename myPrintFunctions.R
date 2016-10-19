@@ -48,7 +48,7 @@ myGetRtf <- function(fileName=NULL){
 myCloseRtf<- function(rtf){
 
 if (is.null(rtf) == FALSE){
- done(rtfFile)
+ done(rtf)
 }
   
 }
@@ -159,12 +159,8 @@ myRoundedTablePrint <- function(rtf=NULL, dfToPrint=NULL, colsToRound=0, numDigi
   }
   
   # Get how many digits to round to depending on if it was set or not
-  if (missing(numDigits) == TRUE){
-    howManyDigits = options("digits")
-  }
-  else {
-    howManyDigits = numDigits
-  }
+  howManyDigits = numDigits
+  
   
   # Set the title to include the current table number and then increment current table number
   title <- paste("Table ",myTablePrint.env$tableNum, " - ",title)

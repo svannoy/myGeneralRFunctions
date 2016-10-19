@@ -98,14 +98,20 @@ countSignificantTests_Bonferroni <- function(pValues, alpha = 0.05, addComps = 0
   }
   
   # Sort the pValues in decending order
-  bonFerroniP  <- 1-(1-alpha)^(1/length(pValues)+addComps)
+  bonFerroniP  <- alpha/(length(pValues)+addComps)
 
+  # Historical note here, I confused the Sidak formula with the Bonferroni. The Sidak give slightly 
+  # more power but was largely replaced with the Bonferroni because the fractional power component made it difficult to compute
+  # I include it here so I can find it in the future :)
+  sidakP  <- 1-(1-alpha)^(1/length(pValues)+addComps)
+ 
   
   numSigResults <- sum(pValues < bonFerroniP)
   indexSigResults <- which(pValues < bonFerroniP)
   
   return(list(numSignificant = numSigResults, sigPIndexes = indexSigResults, sigPValues = pValues[indexSigResults], bonFerroniP = bonFerroniP))
 }
+
 
 ###
 # Function: getTypeIErrProb
